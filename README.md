@@ -35,7 +35,85 @@ Verify the Group names match the groups in xMatters and the message template is 
 
    
 # Testing
-Be specific. What should happen to make sure this code works? What would a user expect to see?
+Initiate the call to Alertus. Generally the code will be fired from the Outbound Integration Event Status script. A successfull call to Alertus will return an ID:
+
+```
+Executing outbound integration for xMatters event ID: 3666002
+> POST http://alertus.server.com/alertusmw/services/rest/activation/custom HTTP/1.1
+> Accept: text/plain, application/json, application/*+json, */*
+> User-Agent: Xerus (EndpointClient)
+> Content-Type: application/com.alertus-v1.0+json; charset=UTF-8
+> X-Trace: 8405ed28-85a3-49a0-be8b-2e54ee35d048,c7ded404-489b-4867-bd25-22a27d0ce28b
+> Content-Length: 191
+{
+  "addressMode": "Group",
+  "alertProfileId": 1,
+  "clientName": "xMatters IB",
+  "clientVersion": "1.0",
+  "durationSeconds": 300,
+  "groupNameRecipients": [
+    "Facilities North"
+  ],
+  "sender": "xMatters",
+  "text": "This is my text"
+}
+
+< HTTP/1.1 200 200
+< Date: Mon, 22 May 2017 21:20:49 GMT
+< Server: Apache
+< X-Frame-Options: SAMEORIGIN
+< X-Content-Type-Options: nosniff
+< X-XSS-Protection: 1; mode=block
+< Keep-Alive: timeout=5, max=100
+< Connection: Keep-Alive
+< Transfer-Encoding: chunked
+< Content-Type: application/json;charset=UTF-8
+3023
+
+```
+
+If the recipients don't exist, the call will fail with a funny looking message:
+
+```
+Executing outbound integration for xMatters event ID: 3666001
+> POST http://sensor.alertus.com/alertusmw/services/rest/activation/custom HTTP/1.1
+> Accept: text/plain, application/json, application/*+json, */*
+> User-Agent: Xerus (EndpointClient)
+> Content-Type: application/com.alertus-v1.0+json; charset=UTF-8
+> X-Trace: e948cdaf-148c-46c7-855b-75a7169480a8,135b490d-1f4d-4906-ae49-49b982c348bb
+> Content-Length: 220
+{
+  "addressMode": "Group",
+  "alertProfileId": 1,
+  "clientName": "xMatters IB",
+  "clientVersion": "1.0",
+  "durationSeconds": 300,
+  "groupNameRecipients": [
+    "THIS GROUP DOES NOT EXIST"
+  ],
+  "sender": "xMatters",
+  "text": "This is my text"
+}
+
+< HTTP/1.1 400 400
+< Date: Mon, 22 May 2017 21:18:03 GMT
+< Server: Apache
+< X-Frame-Options: SAMEORIGIN
+< X-Content-Type-Options: nosniff
+< X-XSS-Protection: 1; mode=block
+< Connection: close
+< Transfer-Encoding: chunked
+< Content-Type: application/json;charset=UTF-8
+{
+  "data": null,
+  "errorCode": 400,
+  "message": "Server was unable to process invalid custom alert: AlertusValidationException: The list of Address Mode Recipients is either empty or null"
+}
+```
+
 
 # Troubleshooting
-Optional section for how to troubleshoot. Especially anything in the source application that an xMatters developer might not know about. 
+The activity stream in xMatters will be the best place to check for any errors. 
+
+
+

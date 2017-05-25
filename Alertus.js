@@ -20,6 +20,12 @@
   
   var Alertus = require( 'Alertus' );
   
+  // Only fire if we are initiating an event
+  if ( callback.status != 'active' )
+    return;
+
+  // Making a call to the GET /events api to retrieve the event recipients is probably 
+  // the best way to get the targets, but this is the format they should be in. 
   var groupRecipients = [ 'North Facility 1', 'North Facility 2' ];
   
   var payload = {
@@ -37,7 +43,7 @@
    
 */
 
-exports.acivateAlert = function( payload ) {
+exports.activateAlert = function( payload ) {
     
    if (!payload) {
        console.log( 'No payload passed, exiting' );
@@ -63,3 +69,7 @@ exports.acivateAlert = function( payload ) {
    
    
 };
+
+
+
+
