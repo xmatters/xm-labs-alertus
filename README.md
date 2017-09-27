@@ -3,6 +3,9 @@
 
 **Note**: This integration does not use Alertus as a "device" in xMatters and instead will target a group or organizational unit in Alertus. 
 
+<kbd>
+  <img src="https://github.com/xmatters/xMatters-Labs/raw/master/media/disclaimer.png">
+</kbd>
 
 # Pre-Requisites
 * Alertus server
